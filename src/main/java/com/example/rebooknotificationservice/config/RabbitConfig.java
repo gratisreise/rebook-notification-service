@@ -5,7 +5,9 @@ import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.QueueBuilder;
 import org.springframework.amqp.core.TopicExchange;
+import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
@@ -20,21 +22,27 @@ public class RabbitConfig {
     private static final String BOOK_NOTIFICATION_QUEUE = "book.notification.queue";
     private static final String TRADE_NOTIFICATION_QUEUE = "trade.notification.queue";
     private static final String CHAT_NOTIFICATION_QUEUE = "chat.notification.queue";
+    private static final String DLQ_QUEUE = "dlq.notification.queue";
 
     // 2. 익스체인지 이름 (각각 분리)
     private static final String BOOK_NOTIFICATION_EXCHANGE = "book.notification.exchange";
     private static final String TRADE_NOTIFICATION_EXCHANGE = "trade.notification.exchange";
     private static final String CHAT_NOTIFICATION_EXCHANGE = "chat.notification.exchange";
+    private static final String DLQ_EXCHANGE = "dlq.notification.exchange";
 
     // 3. 라우팅키 (각각 분리)
-    private static final String BOOK_ROUTING_KEY = "book.notification.key";
-    private static final String TRADE_ROUTING_KEY = "trade.notification.key";
-    private static final String CHAT_ROUTING_KEY = "chat.notification.key";
+    private static final String BOOK_ROUTING_KEY = "book";
+    private static final String TRADE_ROUTING_KEY = "trade";
+    private static final String CHAT_ROUTING_KEY = "chat";
+    private static final String DLQ_ROUTING_KEY = "dlq";
 
     // --- BOOK ---
     @Bean
     public Queue bookNotificationQueue() {
-        return new Queue(BOOK_NOTIFICATION_QUEUE, true);
+        return QueueBuilder.durable(BOOK_NOTIFICATION_QUEUE)
+            .withArgument("x-dead-letter-exchange", DLQ_EXCHANGE)
+            .withArgument("x-dead-letter-routing-key", DLQ_ROUTING_KEY)
+            .build();
     }
 
     @Bean
@@ -52,7 +60,10 @@ public class RabbitConfig {
     // --- TRADE ---
     @Bean
     public Queue tradeNotificationQueue() {
-        return new Queue(TRADE_NOTIFICATION_QUEUE, true);
+        return QueueBuilder.durable(TRADE_NOTIFICATION_QUEUE)
+            .withArgument("x-dead-letter-exchange", DLQ_EXCHANGE)
+            .withArgument("x-dead-letter-routing-key", DLQ_ROUTING_KEY)
+            .build();
     }
 
     @Bean
@@ -70,7 +81,10 @@ public class RabbitConfig {
     // --- CHAT ---
     @Bean
     public Queue chatNotificationQueue() {
-        return new Queue(CHAT_NOTIFICATION_QUEUE, true);
+        return QueueBuilder.durable(CHAT_NOTIFICATION_QUEUE)
+            .withArgument("x-dead-letter-exchange", DLQ_EXCHANGE)
+            .withArgument("x-dead-letter-routing-key", DLQ_ROUTING_KEY)
+            .build();
     }
 
     @Bean
@@ -86,16 +100,37 @@ public class RabbitConfig {
     }
 
 
+    // DLQ
+    @Bean
+    public TopicExchange deadLetterExchange() {
+        return new TopicExchange(DLQ_EXCHANGE);
+    }
+
+    @Bean
+    public Queue deadLetterQueue() {
+        return QueueBuilder.durable(DLQ_QUEUE).build();
+    }
+
+    @Bean
+    public Binding dlqBinding() {
+        return BindingBuilder.bind(deadLetterQueue())
+            .to(deadLetterExchange())
+            .with(DLQ_ROUTING_KEY);
+    }
+
+
     @Bean
     public MessageConverter jsonMessageConverter() {
         return new Jackson2JsonMessageConverter();
     }
 
     @Bean
-    public AmqpTemplate amqpTemplate(ConnectionFactory connectionFactory,
-        MessageConverter messageConverter) {
-        RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
-        rabbitTemplate.setMessageConverter(messageConverter);
-        return rabbitTemplate; // AmqpTemplate 타입으로 노출
+    public SimpleRabbitListenerContainerFactory rabbitListenerContainerFactory(
+        ConnectionFactory connectionFactory, MessageConverter messageConverter) {
+        SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
+        factory.setConnectionFactory(connectionFactory);
+        factory.setMessageConverter(messageConverter);
+        factory.setDefaultRequeueRejected(false); // 예외 발생 시 재큐잉 금지 → DLQ로 이동
+        return factory;
     }
 }

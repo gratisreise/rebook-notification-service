@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class NotificationMessage implements Serializable {
+public class NotificationMessage {
 
     @NotBlank
     private String message;
