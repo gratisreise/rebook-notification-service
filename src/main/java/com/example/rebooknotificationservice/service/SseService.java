@@ -29,7 +29,6 @@ public class SseService {
     private final BookClient bookClient;
     private final UserClient userClient;
 
-    // 알림 메시지 RabbitMsq에서 수신
     public void receiveBookNotification(NotificationBookMessage message) {
         log.info("도서알림진행중");
         List<String> userIds = userClient.getUserIdsByCategory(message.getCategory());
@@ -82,7 +81,7 @@ public class SseService {
     }
 
     public SseEmitter connect(String userId) {
-        SseEmitter emitter = new SseEmitter(600_000L);
+        SseEmitter emitter = new SseEmitter(60_000L);
 
         emitters.put(userId, emitter);
 
@@ -113,7 +112,7 @@ public class SseService {
     }
 
 
-    @Scheduled(fixedRate = 540_000)
+    @Scheduled(fixedRate = 15_000)
     public void sendHeartbeat() {
         for (Map.Entry<String, SseEmitter> entry : emitters.entrySet()) {
             try {
