@@ -4,10 +4,12 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.stereotype.Component;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@Component
 public class NotificationTradeMessage extends NotificationMessage {
     @NotBlank
     String tradingId;
