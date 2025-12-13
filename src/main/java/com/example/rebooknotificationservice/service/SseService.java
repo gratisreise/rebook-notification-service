@@ -30,33 +30,39 @@ public class SseService {
     private final UserClient userClient;
 
     // 알림 메시지 RabbitMsq에서 수신
-    @RabbitListener(queues = "book.notification.queue")
-    public void receiveBookNotification(@Valid NotificationBookMessage message) {
+    public void receiveBookNotification(NotificationBookMessage message) {
         log.info("도서알림진행중");
         List<String> userIds = userClient.getUserIdsByCategory(message.getCategory());
         log.info("아이디받음");
         userIds.forEach(userId -> {
-            notificationService.createBookNotification(message, userId);
-            sendNotification(message, userId);
+            if(isConnected(userId)){
+                notificationService.createBookNotification(message, userId);
+                sendNotification(message, userId);
+            }
         });
     }
 
-    @RabbitListener(queues = "trade.notification.queue")
+
+
     public void receiveTradeNotification(@Valid NotificationTradeMessage message) {
         long bookId = Long.parseLong(message.getBookId());
         List<String> userIds = bookClient.getUserIdsByBookId(bookId);
         log.info("거래알림진행중");
         userIds.forEach(userId -> {
-            notificationService.createTradeNotification(message, userId);
-            sendNotification(message, userId);
+            if(isConnected(userId)){
+                notificationService.createTradeNotification(message, userId);
+                sendNotification(message, userId);
+            }
         });
     }
 
-    @RabbitListener(queues = "chat.notification.queue")
+
     public void receiveChatNotification(@Valid NotificationChatMessage message) {
         log.info("채팅알람메세지 {}", message.toString());
-        notificationService.createChatNotification(message);
-        sendNotification(message, message.getUserId());
+        if(isConnected(message.getUserId())){
+            notificationService.createChatNotification(message);
+            sendNotification(message, message.getUserId());
+        }
     }
 
     private void sendNotification(NotificationMessage message, String userId) {
@@ -69,6 +75,10 @@ public class SseService {
                 emitters.remove(userId);
             }
         }
+    }
+
+    private boolean isConnected(String userId){
+        return emitters.containsKey(userId);
     }
 
     public SseEmitter connect(String userId) {
@@ -101,6 +111,7 @@ public class SseService {
             emitters.remove(userId);
         }
     }
+
 
     @Scheduled(fixedRate = 540_000)
     public void sendHeartbeat() {
