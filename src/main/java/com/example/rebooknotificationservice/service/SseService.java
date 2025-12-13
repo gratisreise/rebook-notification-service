@@ -13,7 +13,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -34,32 +33,26 @@ public class SseService {
         List<String> userIds = userClient.getUserIdsByCategory(message.getCategory());
         log.info("아이디받음");
         userIds.forEach(userId -> {
-            if(isConnected(userId)){
-                notificationService.createBookNotification(message, userId);
-                sendNotification(message, userId);
-            }
+            notificationService.createBookNotification(message, userId);
+            if(isConnected(userId)) sendNotification(message, userId);
         });
     }
-
-
 
     public void receiveTradeNotification(@Valid NotificationTradeMessage message) {
         long bookId = Long.parseLong(message.getBookId());
         List<String> userIds = bookClient.getUserIdsByBookId(bookId);
         log.info("거래알림진행중");
         userIds.forEach(userId -> {
-            if(isConnected(userId)){
-                notificationService.createTradeNotification(message, userId);
-                sendNotification(message, userId);
-            }
+            notificationService.createTradeNotification(message, userId);
+            if(isConnected(userId)) sendNotification(message, userId);
         });
     }
 
 
     public void receiveChatNotification(@Valid NotificationChatMessage message) {
         log.info("채팅알람메세지 {}", message.toString());
+        notificationService.createChatNotification(message);
         if(isConnected(message.getUserId())){
-            notificationService.createChatNotification(message);
             sendNotification(message, message.getUserId());
         }
     }

@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 @Getter
 @Setter
 @NoArgsConstructor
-@Component
 public class NotificationBookMessage extends NotificationMessage {
     private String bookId;
     private String category;

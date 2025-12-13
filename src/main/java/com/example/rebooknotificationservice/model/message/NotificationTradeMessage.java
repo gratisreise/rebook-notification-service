@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 @Getter
 @Setter
 @NoArgsConstructor
-@Component
 public class NotificationTradeMessage extends NotificationMessage {
     @NotBlank
     String tradingId;

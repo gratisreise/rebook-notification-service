@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 @Getter
 @Setter
 @NoArgsConstructor
-@Component
 public class NotificationChatMessage extends NotificationMessage {
     private String userId;
     private String roomId;
