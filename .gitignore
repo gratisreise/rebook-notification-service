@@ -35,7 +35,7 @@ out/
 
 ### VS Code ###
 .vscode/
-CLAUDE.md
+.claude/CLAUDE.md
 postman-collection.json
 Rebook_NotificationService.json
 GEMINI.md

@@ -41,7 +41,6 @@ dependencies {
 // ====== 웹 및 REST API ======
     implementation 'org.springframework.boot:spring-boot-starter-web' // 웹 MVC (REST API)
     implementation 'org.springframework.boot:spring-boot-starter-validation' // Bean Validation
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
 
     //공통라이브러리
     implementation "com.rebook:passport-common:1.0.0"
