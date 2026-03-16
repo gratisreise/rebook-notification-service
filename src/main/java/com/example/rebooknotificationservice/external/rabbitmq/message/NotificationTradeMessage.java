@@ -1,4 +1,4 @@
-package com.example.rebooknotificationservice.domain.model.message;
+package com.example.rebooknotificationservice.external.rabbitmq.message;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;

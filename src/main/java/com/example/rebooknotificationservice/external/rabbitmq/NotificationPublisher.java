@@ -1,9 +1,9 @@
-package com.example.rebooknotificationservice.domain.service;
+package com.example.rebooknotificationservice.external.rabbitmq;
 
-import com.example.rebooknotificationservice.domain.model.message.NotificationBookMessage;
-import com.example.rebooknotificationservice.domain.model.message.NotificationChatMessage;
-import com.example.rebooknotificationservice.domain.model.message.NotificationMessage;
-import com.example.rebooknotificationservice.domain.model.message.NotificationTradeMessage;
+import com.example.rebooknotificationservice.external.rabbitmq.message.NotificationBookMessage;
+import com.example.rebooknotificationservice.external.rabbitmq.message.NotificationChatMessage;
+import com.example.rebooknotificationservice.external.rabbitmq.message.NotificationMessage;
+import com.example.rebooknotificationservice.external.rabbitmq.message.NotificationTradeMessage;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;

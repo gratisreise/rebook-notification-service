@@ -1,6 +1,6 @@
 package com.example.rebooknotificationservice.external.redis;
 
-import com.example.rebooknotificationservice.domain.service.NotificationSubscriber;
+import com.example.rebooknotificationservice.external.rabbitmq.NotificationSubscriber;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;

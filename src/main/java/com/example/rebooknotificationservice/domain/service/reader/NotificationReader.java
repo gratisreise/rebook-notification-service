@@ -1,8 +1,8 @@
-package com.example.rebooknotificationservice.domain.service;
+package com.example.rebooknotificationservice.domain.service.reader;
 
 import com.example.rebooknotificationservice.domain.model.entity.Notification;
 import com.example.rebooknotificationservice.domain.repository.NotificationRepository;
-import com.example.rebooknotificationservice.exception.CMissingDataException;
+import com.example.rebooknotificationservice.exception.NotificationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,7 +21,7 @@ public class NotificationReader {
 
     public Notification findById(Long id){
         return notificationRepository.findById(id)
-            .orElseThrow(CMissingDataException::new);
+            .orElseThrow(NotificationException::new);
     }
 
 

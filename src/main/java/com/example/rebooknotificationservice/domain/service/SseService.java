@@ -1,9 +1,9 @@
 package com.example.rebooknotificationservice.domain.service;
 
-import com.example.rebooknotificationservice.domain.model.message.NotificationBookMessage;
-import com.example.rebooknotificationservice.domain.model.message.NotificationChatMessage;
-import com.example.rebooknotificationservice.domain.model.message.NotificationMessage;
-import com.example.rebooknotificationservice.domain.model.message.NotificationTradeMessage;
+import com.example.rebooknotificationservice.external.rabbitmq.message.NotificationBookMessage;
+import com.example.rebooknotificationservice.external.rabbitmq.message.NotificationChatMessage;
+import com.example.rebooknotificationservice.external.rabbitmq.message.NotificationMessage;
+import com.example.rebooknotificationservice.external.rabbitmq.message.NotificationTradeMessage;
 import com.example.rebooknotificationservice.clientfeign.book.BookClient;
 import com.example.rebooknotificationservice.clientfeign.user.UserClient;
 import jakarta.validation.Valid;

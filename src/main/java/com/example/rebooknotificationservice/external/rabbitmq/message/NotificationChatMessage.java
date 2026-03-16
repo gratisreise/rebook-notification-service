@@ -1,4 +1,4 @@
-package com.example.rebooknotificationservice.domain.model.message;
+package com.example.rebooknotificationservice.external.rabbitmq.message;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
