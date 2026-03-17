@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 @FeignClient(name="book-service")
 public interface BookClient {
-    @GetMapping("/alarms/books/{bookId}")
+    @GetMapping("/internal/books/alarms/books/{bookId}")
     List<String> getUserIdsByBookId(@PathVariable long bookId);
 }

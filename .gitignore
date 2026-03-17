@@ -41,3 +41,5 @@ Rebook_NotificationService.json
 GEMINI.md
 *.txt
 .claude
+.claudedocs
+.serena

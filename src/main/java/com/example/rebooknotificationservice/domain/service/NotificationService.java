@@ -48,7 +48,7 @@ public class NotificationService {
 
     public Page<NotificationResponse> getNotifications(String userId, Pageable pageable) {
         Page<Notification> notifications = notificationReader.getNotifications(userId, pageable);
-        return notifications.map(NotificationResponse::new);
+        return notifications.map(NotificationResponse::from);
     }
 
     public Long getNotReadNumbers(String userId) {
@@ -75,7 +75,7 @@ public class NotificationService {
     public List<NotificationSettingResponse> getAllNotificationSettings(String userId) {
         List<NotificationSetting> settings = notificationSettingReader.getAllNotificationSettings(userId);
         return settings.stream()
-            .map(NotificationSettingResponse::new)
+            .map(NotificationSettingResponse::from)
             .toList();
     }
 
