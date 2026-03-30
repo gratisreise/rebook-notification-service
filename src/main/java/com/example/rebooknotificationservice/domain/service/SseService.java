@@ -29,9 +29,7 @@ public class SseService {
     private final UserClient userClient;
 
     public void receiveBookNotification(NotificationBookMessage message) {
-        log.info("도서알림진행중");
         List<String> userIds = userClient.getUserIdsByCategory(message.getCategory());
-        log.info("아이디받음");
         userIds.forEach(userId -> {
             notificationService.createBookNotification(message, userId);
             if(isConnected(userId)) sendNotification(message, userId);
@@ -41,16 +39,13 @@ public class SseService {
     public void receiveTradeNotification(@Valid NotificationTradeMessage message) {
         long bookId = Long.parseLong(message.getBookId());
         List<String> userIds = bookClient.getUserIdsByBookId(bookId);
-        log.info("거래알림진행중");
         userIds.forEach(userId -> {
             notificationService.createTradeNotification(message, userId);
             if(isConnected(userId)) sendNotification(message, userId);
         });
     }
 
-
     public void receiveChatNotification(@Valid NotificationChatMessage message) {
-        log.info("채팅알람메세지 {}", message.toString());
         notificationService.createChatNotification(message);
         if(isConnected(message.getUserId())){
             sendNotification(message, message.getUserId());
@@ -87,9 +82,7 @@ public class SseService {
             emitter.send(SseEmitter.event()
                 .name("connected")
                 .data("connected"));
-            log.info("sse연결 성공!!");
         } catch (IOException e) {
-            log.warn("sse연결 실패!!");
             sendErrorToClient(userId, e.getMessage());
         }
 
