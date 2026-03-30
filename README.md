@@ -8,11 +8,19 @@ Rebook 플랫폼의 실시간 알림 마이크로서비스입니다. SSE(Server-
 
 ## 목차
 
+- [아키텍처](#아키텍처)
 - [기능](#기능)
 - [기술 스택](#기술-스택)
 - [API 문서](#api-문서)
 - [프로젝트 구조](#프로젝트-구조)
 - [RabbitMQ 큐 구성](#rabbitmq-큐-구성)
+
+---
+
+## 아키텍처
+
+- 알림흐름
+![알림흐름](https://diagrams-noaahh.s3.ap-northeast-2.amazonaws.com/notification.png)
 
 ---
 
@@ -63,10 +71,10 @@ Rebook 플랫폼의 실시간 알림 마이크로서비스입니다. SSE(Server-
 
 ## API 문서
 
-애플리케이션 실행 후 Swagger UI에서 전체 API 문서를 확인할 수 있습니다:
+Apidog에서 확인하실 수 있습니다:
 
 ```
-http://localhost:8080/swagger-ui.html
+https://x6wq8qo61i.apidog.io/
 ```
 
 ### 알림 조회
